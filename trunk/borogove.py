@@ -60,7 +60,7 @@ if __name__ == '__main__':
   try:
     if not check_root():
         print 'Must be run as root.'
-        return
+        
     print 'listening on %s' % (pc.name)
     print 'to exit, type Control-c'
     poison(sys.argv[1],sys.argv[2],sys.argv[3])
