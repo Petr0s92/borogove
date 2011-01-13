@@ -54,13 +54,15 @@ if __name__ == '__main__':
   if len(sys.argv) < 4:
     print 'usage: sniff.py <interface> <target> <gateway>'
     sys.exit(0)
+  if not check_root():
+    print 'Must be run as root.'
+    sys.exit(1)
+
   pid="fo bar" 
   pc = pcap.pcap(sys.argv[1])
   pc.setfilter('tcp and port 80') # Sniff only http
+
   try:
-    if not check_root():
-        print 'Must be run as root.'
-        
     print 'listening on %s' % (pc.name)
     print 'to exit, type Control-c'
     poison(sys.argv[1],sys.argv[2],sys.argv[3])
